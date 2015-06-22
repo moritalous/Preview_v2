@@ -2,10 +2,13 @@
 package forest.rice.field.k.preview.view.lyric;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +22,7 @@ import forest.rice.field.k.preview.request.LyricRequest;
 import forest.rice.field.k.preview.view.dialog.LyricSelectDialogFragment;
 import forest.rice.field.k.preview.view.dialog.SimpleAlertDialog;
 
-public class LyricActivity extends Activity {
+public class LyricActivity extends AppCompatActivity {
 
     public static final String EXTRA_ARTIST = "artist";
     public static final String EXTRA_TRACK = "track";
@@ -27,10 +30,12 @@ public class LyricActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_lyric);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
@@ -49,7 +54,7 @@ public class LyricActivity extends Activity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_lyric, container, false);
 
             webview = (WebView) rootView.findViewById(R.id.lyric_webview);
@@ -57,10 +62,14 @@ public class LyricActivity extends Activity {
 
             progressBar.setVisibility(View.VISIBLE);
 
-            String artist = getActivity().getIntent().getStringExtra(EXTRA_ARTIST);
-            String track = getActivity().getIntent().getStringExtra(EXTRA_TRACK);
+            FragmentActivity activity = getActivity();
 
-            getActivity().getActionBar().setTitle(artist + " / " + track);
+            String artist = activity.getIntent().getStringExtra(EXTRA_ARTIST);
+            String track = activity.getIntent().getStringExtra(EXTRA_TRACK);
+
+            if (activity instanceof AppCompatActivity) {
+                ((AppCompatActivity) activity).getSupportActionBar().setTitle(track + " / " + artist);
+            }
 
             new LyricsSearchTask().execute(artist, track);
 
@@ -91,7 +100,7 @@ public class LyricActivity extends Activity {
             protected void onPostExecute(final Lyrics result) {
                 switch (result.size()) {
                     case 0:
-                    // なし
+                        // なし
                     {
                         SimpleAlertDialog dialog = SimpleAlertDialog
                                 .newInstance(getString(R.string.lyric_search_no_result));
@@ -106,13 +115,13 @@ public class LyricActivity extends Activity {
 
                         progressBar.setVisibility(View.GONE);
                     }
-                        break;
+                    break;
                     case 1:
                         // Webビューに表示
                         new LyricsGetTask().execute(result.get(0));
                         break;
                     default:
-                    // ダイアログ表示
+                        // ダイアログ表示
                     {
                         String[] items = new String[result.size()];
                         for (int i = 0; i < result.size(); i++) {
@@ -130,7 +139,7 @@ public class LyricActivity extends Activity {
                         };
                         dialogFragment.show(getFragmentManager(), "TAG");
                     }
-                        break;
+                    break;
                 }
             }
         }

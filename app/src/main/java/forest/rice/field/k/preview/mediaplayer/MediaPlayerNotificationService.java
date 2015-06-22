@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -23,7 +24,7 @@ import com.example.android.uamp.AlbumArtCache;
 import forest.rice.field.k.R;
 import forest.rice.field.k.preview.entity.Track;
 
-public class MediaPlayerNitificationService extends Service implements
+public class MediaPlayerNotificationService extends Service implements
         OnPreparedListener, OnCompletionListener {
 
     private MediaPlayer player = null;
@@ -133,7 +134,7 @@ public class MediaPlayerNitificationService extends Service implements
                     getApplicationContext());
 
             Intent playIntent = new Intent(getApplicationContext(),
-                    MediaPlayerNitificationService.class);
+                    MediaPlayerNotificationService.class);
             playIntent.setAction(ServiceStatics.ACTION_RESUME);
             PendingIntent playPIntent = PendingIntent.getService(
                     getApplicationContext(),
@@ -141,7 +142,7 @@ public class MediaPlayerNitificationService extends Service implements
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             Intent pauseIntent = new Intent(getApplicationContext(),
-                    MediaPlayerNitificationService.class);
+                    MediaPlayerNotificationService.class);
             pauseIntent.setAction(ServiceStatics.ACTION_PAUSE);
             PendingIntent pausePIntent = PendingIntent.getService(
                     getApplicationContext(),
@@ -149,7 +150,7 @@ public class MediaPlayerNitificationService extends Service implements
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             Intent closeIntent = new Intent(getApplicationContext(),
-                    MediaPlayerNitificationService.class);
+                    MediaPlayerNotificationService.class);
             closeIntent.setAction(ServiceStatics.ACTION_CLOSE);
             PendingIntent closePIntent = PendingIntent.getService(
                     getApplicationContext(),
@@ -157,7 +158,7 @@ public class MediaPlayerNitificationService extends Service implements
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             Intent openwebIntent = new Intent(getApplicationContext(),
-                    MediaPlayerNitificationService.class);
+                    MediaPlayerNotificationService.class);
             openwebIntent.setAction(ServiceStatics.ACTION_OPENWEB);
             PendingIntent openWebPIntent = PendingIntent.getService(getApplicationContext(),
                     NotificationStatics.REQUEST_CODE_OPENWEB, openwebIntent,
@@ -285,4 +286,11 @@ public class MediaPlayerNitificationService extends Service implements
         play();
     }
 
+    public class MediaPlayerBinder extends Binder {
+
+        public MediaPlayerNotificationService getService() {
+            return MediaPlayerNotificationService.this;
+        }
+
+    }
 }

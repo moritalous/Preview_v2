@@ -2,6 +2,10 @@
 package forest.rice.field.k.preview.view.searchResultView;
 
 import android.os.Bundle;
+import android.view.Menu;
+
+import forest.rice.field.k.R;
+import forest.rice.field.k.base.NavigationDrawerBaseInterface;
 import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.view.base.BaseListFragment;
 import forest.rice.field.k.preview.view.searchResultView.SearchResultAsyncTask.SearchResultAsyncTaskCallback;
@@ -35,14 +39,22 @@ public class SearchResultFragment extends BaseListFragment implements
         SearchResultAsyncTask asyncTask = new SearchResultAsyncTask();
         asyncTask.callback = this;
         asyncTask.execute(keyword);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        getActivity().getActionBar().setTitle(keyword);
+        if (getActivity() instanceof NavigationDrawerBaseInterface) {
+            NavigationDrawerBaseInterface activity = (NavigationDrawerBaseInterface) getActivity();
+            activity.setChecked(R.id.nav_search);
 
+            Menu menu = activity.getNavigationMenu();
+            menu.findItem(R.id.nav_search).setVisible(true);
+        }
+
+        setTitle(keyword);
     }
 
     @Override

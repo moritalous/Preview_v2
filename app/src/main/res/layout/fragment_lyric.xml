@@ -2,16 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="forest.rice.field.k.preview.LyricActivity$PlaceholderFragment" >
+    android:padding="16dp"
+    tools:context="forest.rice.field.k.preview.LyricActivity$PlaceholderFragment">
 
-    <WebView
-        android:id="@+id/lyric_webview"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="4dp">
+
+        <WebView
+            android:id="@+id/lyric_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v7.widget.CardView>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <ProgressBar
             android:id="@+id/lyric_progress"

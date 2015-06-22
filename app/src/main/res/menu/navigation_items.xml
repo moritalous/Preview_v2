@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_mainmenu"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_ranking"
-            android:title="トップチャート"></item>
+            android:title="@string/nav_topchart"></item>
         <item
             android:id="@+id/nav_search"
-            android:title="検索"></item>
+            android:title="@string/nav_search"></item>
     </group>
+
+    <group android:id="@+id/nav_submenu">
+        <menu>
+            <item
+                android:id="@+id/nav_source"
+                android:title="@string/nav_source"></item>
+        </menu>
+
+    </group>
+
 
 </menu>

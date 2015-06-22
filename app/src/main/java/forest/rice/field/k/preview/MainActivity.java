@@ -1,7 +1,6 @@
 
 package forest.rice.field.k.preview;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
 import forest.rice.field.k.R;
-import forest.rice.field.k.preview.mediaplayer.MediaPlayerNitificationService;
+import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.view.searchResultView.SearchResultFragment;
 import forest.rice.field.k.preview.view.topChart.TopChartAsyncTask;
 import forest.rice.field.k.preview.view.topChart.TopChartListFragment;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnQueryTextListen
     protected void onDestroy() {
         super.onDestroy();
 
-        stopService(new Intent(getApplicationContext(), MediaPlayerNitificationService.class));
+        stopService(new Intent(getApplicationContext(), MediaPlayerNotificationService.class));
     }
 
     @Override

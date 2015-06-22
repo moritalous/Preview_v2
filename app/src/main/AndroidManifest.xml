@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="forest.rice.field.k">
-    
+
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
@@ -9,13 +9,20 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".base.NavigationDrawerBaseActivity">
+        <activity
+            android:name=".base.NavigationDrawerBaseActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
 
+        <service android:name=".preview.mediaplayer.MediaPlayerNotificationService" >
+        </service>
+
+        <activity android:name=".preview.view.lyric.LyricActivity" >
+        </activity>
     </application>
 
 </manifest>

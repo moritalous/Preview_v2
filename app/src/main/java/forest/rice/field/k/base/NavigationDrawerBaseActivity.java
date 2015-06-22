@@ -1,32 +1,37 @@
 package forest.rice.field.k.base;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import forest.rice.field.k.R;
+import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.view.topChart.TopChartListFragment;
 
 
-public class NavigationDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
-{
+public class NavigationDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, NavigationDrawerBaseInterface {
     private DrawerLayout mDrawerLayout;
 
     private ActionBarHelper mActionBar;
-
 
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
 
     private NavigationView mNavigationView;
+
+    private Fragment topChartFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,9 +61,19 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        if (topChartFragment == null) {
+            topChartFragment = TopChartListFragment.newInstance();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, TopChartListFragment.newInstance()).addToBackStack(null)
+                .replace(R.id.container, topChartFragment)
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        stopService(new Intent(getApplicationContext(), MediaPlayerNotificationService.class));
     }
 
     @Override
@@ -92,7 +107,34 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mToolbar.setTitle(menuItem.getTitle());
         menuItem.setChecked(true);
         mDrawerLayout.closeDrawers();
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_source:
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/moritalous/Preview"));
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+
         return true;
+    }
+
+    @Override
+    public void setChecked(int id) {
+        mNavigationView.getMenu().findItem(id).setChecked(true);
+    }
+
+    @Override
+    public Menu getNavigationMenu() {
+        return mNavigationView.getMenu();
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mActionBar.setTitle(title);
+        getSupportActionBar().setTitle(title);
     }
 
     private class DrawerListener implements DrawerLayout.DrawerListener {
