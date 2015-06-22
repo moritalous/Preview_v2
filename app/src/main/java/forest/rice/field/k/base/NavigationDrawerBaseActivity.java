@@ -111,9 +111,13 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         switch (menuItem.getItemId()) {
             case R.id.nav_source:
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://github.com/moritalous/Preview"));
+                        Uri.parse("https://github.com/moritalous/Preview_v2"));
                 startActivity(intent);
                 break;
+            case R.id.nav_ranking:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, topChartFragment)
+                        .commit();
             default:
                 break;
         }
