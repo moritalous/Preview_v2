@@ -1,11 +1,16 @@
 package forest.rice.field.k.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +22,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import forest.rice.field.k.R;
+import forest.rice.field.k.preview.entity.Track;
+import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
+import forest.rice.field.k.preview.view.playing.PlayingFragment;
 import forest.rice.field.k.preview.view.topChart.TopChartListFragment;
 
 
@@ -32,6 +40,8 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
     private NavigationView mNavigationView;
 
     private Fragment topChartFragment;
+
+    private Tracks tracks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,10 +124,20 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
                         Uri.parse("https://github.com/moritalous/Preview_v2"));
                 startActivity(intent);
                 break;
-            case R.id.nav_ranking:
-                getSupportFragmentManager().beginTransaction()
+            case R.id.nav_ranking: {
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager()
+                        .beginTransaction()
                         .replace(R.id.container, topChartFragment)
                         .commit();
+            }
+            break;
+            case R.id.nav_playlist: {
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, PlayingFragment.newInstance())
+                        .commit();
+            }
             default:
                 break;
         }
@@ -139,6 +159,24 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
     public void setTitle(CharSequence title) {
         mActionBar.setTitle(title);
         getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void setTracks(Tracks tracks) {
+        this.tracks = tracks;
+    }
+
+    @Override
+    public void clearTracks() {
+        this.tracks.clear();
+    }
+
+    @Override
+    public Tracks getTracks() {
+        if(this.tracks == null) {
+            this.tracks = new Tracks();
+        }
+        return this.tracks;
     }
 
     private class DrawerListener implements DrawerLayout.DrawerListener {
@@ -213,5 +251,6 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
             mTitle = title;
         }
     }
+
 
 }

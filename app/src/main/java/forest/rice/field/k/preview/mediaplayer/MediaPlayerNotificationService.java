@@ -208,6 +208,7 @@ public class MediaPlayerNotificationService extends Service implements
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
+                sendBroadcast(playingTrack);
             } catch (Exception e) {
             }
         }
@@ -286,11 +287,11 @@ public class MediaPlayerNotificationService extends Service implements
         play();
     }
 
-    public class MediaPlayerBinder extends Binder {
-
-        public MediaPlayerNotificationService getService() {
-            return MediaPlayerNotificationService.this;
-        }
-
+    public void sendBroadcast(Track track) {
+        Intent intent = new Intent();
+        intent.putExtra("track", track);
+        intent.setAction("PLAYING_TRACK");
+        getBaseContext().sendBroadcast(intent);
     }
+
 }

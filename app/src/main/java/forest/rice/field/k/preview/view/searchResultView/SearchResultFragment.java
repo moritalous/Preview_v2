@@ -17,6 +17,8 @@ public class SearchResultFragment extends BaseListFragment implements
 
     private String keyword = null;
 
+    private SearchResultAsyncTask task;
+
     public SearchResultFragment() {
     }
 
@@ -36,10 +38,6 @@ public class SearchResultFragment extends BaseListFragment implements
             keyword = getArguments().getString(KEYWORD);
         }
 
-        SearchResultAsyncTask asyncTask = new SearchResultAsyncTask();
-        asyncTask.callback = this;
-        asyncTask.execute(keyword);
-
     }
 
     @Override
@@ -54,7 +52,19 @@ public class SearchResultFragment extends BaseListFragment implements
             menu.findItem(R.id.nav_search).setVisible(true);
         }
 
+        task = new SearchResultAsyncTask();
+        task.callback = this;
+        task.execute(keyword);
+
         setTitle(keyword);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        task.cancel(true);
+        task.callback = null;
     }
 
     @Override

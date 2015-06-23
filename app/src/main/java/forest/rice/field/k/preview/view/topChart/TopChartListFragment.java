@@ -15,6 +15,8 @@ import forest.rice.field.k.preview.view.topChart.TopChartAsyncTask.TopChartAsync
 
 public class TopChartListFragment extends BaseListFragment implements TopChartAsyncTaskCallback {
 
+    TopChartAsyncTask task;
+
     public static TopChartListFragment newInstance() {
         TopChartListFragment fragment = new TopChartListFragment();
         return fragment;
@@ -24,7 +26,7 @@ public class TopChartListFragment extends BaseListFragment implements TopChartAs
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TopChartAsyncTask task = new TopChartAsyncTask();
+        task = new TopChartAsyncTask();
         task.callback = this;
         task.execute();
     }
@@ -41,10 +43,21 @@ public class TopChartListFragment extends BaseListFragment implements TopChartAs
             menu.findItem(R.id.nav_search).setVisible(false);
         }
 
+        if(task.isCancelled()) {
+            task.callback = this;
+            task.execute();
+        }
+
         setTitle(getString(R.string.nav_topchart));
     }
 
-    ;
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        task.cancel(true);
+        task.callback = null;
+    }
 
     @Override
     public void callback(Tracks tracks) {

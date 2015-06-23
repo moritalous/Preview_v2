@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
@@ -28,15 +29,14 @@ import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService.ServiceStatics;
 import forest.rice.field.k.preview.view.dialog.TrackSelectDialogFragment;
 import forest.rice.field.k.preview.view.lyric.LyricActivity;
+import forest.rice.field.k.preview.view.playing.PlayingFragment;
 import forest.rice.field.k.preview.view.searchResultView.SearchResultFragment;
 
 public class BaseListFragment extends ListFragment implements SearchView.OnQueryTextListener {
 
     protected Tracks tracks;
-    private MenuItem searchMenu;
-    private SearchView searchView;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    protected MenuItem searchMenu;
+    protected SearchView searchView;
 
     public BaseListFragment() {
     }
@@ -81,11 +81,14 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
                 switch (which) {
                     case 0:
                         // 単一プレビュー
+                        setTracks(tracks.subTracks(position, position+1));
                         play(tracks.get(position));
                         break;
                     case 1:
                         // 連続プレビュー
+                        setTracks(tracks.subTracks(position, tracks.size()));
                         playAll(tracks, position);
+                        moveToPlayingFragment();
                         break;
                     case 2:
                         // iTunes
@@ -124,6 +127,13 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
 
     }
 
+    protected void setTracks(Tracks tracks) {
+        if(getActivity() instanceof  NavigationDrawerBaseInterface) {
+            NavigationDrawerBaseInterface activity = (NavigationDrawerBaseInterface) getActivity();
+            activity.setTracks(tracks);
+        }
+    }
+
     private void play(Track track) {
         Intent service = new Intent(getActivity(), MediaPlayerNotificationService.class);
         service.setAction(ServiceStatics.ACTION_TRACK_CLEAR);
@@ -139,7 +149,7 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
         getActivity().startService(service);
     }
 
-    private void playAll(Tracks tracks, int startPosition) {
+    protected void playAll(Tracks tracks, int startPosition) {
         Intent service = new Intent(getActivity(), MediaPlayerNotificationService.class);
         service.setAction(ServiceStatics.ACTION_TRACK_CLEAR);
         getActivity().startService(service);
@@ -181,6 +191,16 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
             NavigationDrawerBaseInterface activity = (NavigationDrawerBaseInterface) getActivity();
             activity.setTitle(title);
         }
+    }
+
+    protected void moveToPlayingFragment() {
+
+        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, PlayingFragment.newInstance())
+                .commit();
+
     }
 
 }

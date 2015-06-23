@@ -18,7 +18,7 @@ public class BaseArrayAdapter extends ArrayAdapter<Track> {
 
     private LayoutInflater layoutInflater_;
 
-    private Tracks tracks = null;
+    protected Tracks tracks = null;
 
     // private Context context = null;
 

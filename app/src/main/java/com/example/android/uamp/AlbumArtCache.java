@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 
 import com.example.android.uamp.utils.BitmapHelper;
 
@@ -59,10 +59,15 @@ public final class AlbumArtCache {
         mCache = new LruCache<String, Bitmap[]>(maxSize) {
             @Override
             protected int sizeOf(String key, Bitmap[] value) {
-                return value[BIG_BITMAP_INDEX].getByteCount()
-                    + value[ICON_BITMAP_INDEX].getByteCount();
+                return getSizeInBytes(value[BIG_BITMAP_INDEX])
+                    + getSizeInBytes(value[ICON_BITMAP_INDEX]);
             }
         };
+    }
+
+    private static int getSizeInBytes(Bitmap bitmap) {
+        return bitmap.getRowBytes() * bitmap.getHeight();
+
     }
 
     public Bitmap getBigImage(String artUrl) {
