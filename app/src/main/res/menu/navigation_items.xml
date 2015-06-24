@@ -6,28 +6,29 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_ranking"
-            android:title="@string/nav_topchart"></item>
+            android:icon="@android:drawable/ic_media_play"
+            android:title="@string/nav_top_chart"/>
         <item
             android:id="@+id/nav_search"
-            android:title="@string/nav_search"></item>
+            android:icon="@android:drawable/ic_menu_search"
+            android:title="@string/nav_search"/>
 
         <item
             android:id="@+id/nav_playlist"
-            android:title="@string/nav_playlist"></item>
+            android:icon="@android:drawable/ic_media_ff"
+            android:title="@string/nav_playlist"/>
 
     </group>
 
     <item
         android:id="@+id/nav_submenu"
         android:checkableBehavior="none"
-        android:title="Sub Menu">
+        android:title="@string/nav_submenu">
         <menu>
             <item
                 android:id="@+id/nav_source"
-                android:title="@string/nav_source"></item>
+                android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/nav_source"/>
         </menu>
-
     </item>
-
-
 </menu>

@@ -11,11 +11,11 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <!-- Navigation Item -->
-    <string name="nav_topchart">トップチャート</string>
+    <string name="nav_top_chart">トップチャート</string>
     <string name="nav_search">検索結果</string>
     <string name="nav_source">Source</string>
-    <string name="nav_playlist">Playlist</string>
-
+    <string name="nav_playlist">プレビューキュー</string>
+    <string name="nav_submenu">Sub Menu</string>
 
     <string name="track_select_action_preview">プレビュー</string>
     <string name="track_select_action_preview_all">連続プレビュー</string>

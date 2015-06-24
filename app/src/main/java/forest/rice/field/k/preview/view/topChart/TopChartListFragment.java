@@ -2,12 +2,9 @@
 package forest.rice.field.k.preview.view.topChart;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import forest.rice.field.k.R;
-import forest.rice.field.k.base.NavigationDrawerBaseActivity;
 import forest.rice.field.k.base.NavigationDrawerBaseInterface;
 import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.view.base.BaseListFragment;
@@ -43,20 +40,16 @@ public class TopChartListFragment extends BaseListFragment implements TopChartAs
             menu.findItem(R.id.nav_search).setVisible(false);
         }
 
-        if(task.isCancelled()) {
-            task.callback = this;
-            task.execute();
-        }
-
-        setTitle(getString(R.string.nav_topchart));
+        setTitle(getString(R.string.nav_top_chart));
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
+    public void onDestroy() {
         task.cancel(true);
         task.callback = null;
+        task = null;
+
+        super.onDestroy();
     }
 
     @Override

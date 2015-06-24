@@ -2,6 +2,7 @@
 package forest.rice.field.k.preview.view.base;
 
 import android.content.Context;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,8 @@ public class BaseArrayAdapter extends ArrayAdapter<Track> {
         holder.collection.setText(track.get(Track.collectionName));
 
         VolleyManager manager = VolleyManager.getInstance(getContext());
-        manager.imageGet(track.getLargestArtwork(), holder.image, android.R.drawable.ic_media_play,
-                android.R.drawable.ic_media_play);
+        manager.imageGet(track.getLargestArtwork(), holder.image, android.R.color.transparent,
+                R.drawable.ic_launcher);
 
         return convertView;
     }

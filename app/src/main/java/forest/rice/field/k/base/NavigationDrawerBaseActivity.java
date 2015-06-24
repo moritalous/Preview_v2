@@ -7,10 +7,11 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -20,9 +21,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import forest.rice.field.k.R;
-import forest.rice.field.k.preview.entity.Track;
 import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.view.playing.PlayingFragment;
@@ -30,25 +31,28 @@ import forest.rice.field.k.preview.view.topChart.TopChartListFragment;
 
 
 public class NavigationDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, NavigationDrawerBaseInterface {
+
     private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     private ActionBarHelper mActionBar;
-
     private ActionBarDrawerToggle mDrawerToggle;
-    private Toolbar mToolbar;
 
-    private NavigationView mNavigationView;
+    private Toolbar mToolbar;
 
     private Fragment topChartFragment;
 
     private Tracks tracks;
+
+    private FloatingActionButton floatingActionButton;
+
+    private BroadcastReceiver receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.action_bar_drawer_layout);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         mDrawerLayout.setDrawerListener(new DrawerListener());
 
         // The drawer title must be set in order to announce state changes when
@@ -57,7 +61,6 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mDrawerLayout.setDrawerTitle(GravityCompat.START, getString(R.string.drawer_title));
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
 
         mActionBar = createActionBarHelper();
@@ -71,12 +74,28 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String action = (String)view.getTag();
+
+                Intent service = new Intent(getBaseContext(), MediaPlayerNotificationService.class);
+                service.setAction(action);
+                startService(service);
+            }
+        });
+
         if (topChartFragment == null) {
             topChartFragment = TopChartListFragment.newInstance();
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, topChartFragment)
                 .commit();
+
+        receiver = new MyBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PLAYING_TRACK"));
+        LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("STOP_TRACK"));
     }
 
     @Override
@@ -173,7 +192,7 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
 
     @Override
     public Tracks getTracks() {
-        if(this.tracks == null) {
+        if (this.tracks == null) {
             this.tracks = new Tracks();
         }
         return this.tracks;
@@ -252,5 +271,27 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         }
     }
 
+    class MyBroadcastReceiver extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            switch (action) {
+                case "PLAYING_TRACK": {
+
+                    floatingActionButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                    floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_PAUSE);
+                }
+                break;
+                case "STOP_TRACK": {
+                    floatingActionButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                    floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_RESUME);
+                }
+                break;
+            }
+        }
+    }
 }

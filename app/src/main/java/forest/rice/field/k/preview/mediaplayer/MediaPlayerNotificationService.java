@@ -14,10 +14,11 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.example.android.uamp.AlbumArtCache;
 
@@ -53,11 +54,6 @@ public class MediaPlayerNotificationService extends Service implements
         public static final int REQUEST_CODE_CLOSE = 4001;
         public static final int REQUEST_CODE_OPENWEB = 5001;
         public static final int NOTIFY_ID = 3001;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     @Override
@@ -116,6 +112,12 @@ public class MediaPlayerNotificationService extends Service implements
         player = null;
 
         manager.cancelAll();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
@@ -208,7 +210,7 @@ public class MediaPlayerNotificationService extends Service implements
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-                sendBroadcast(playingTrack);
+                sendBroadcastForPlay(playingTrack);
             } catch (Exception e) {
             }
         }
@@ -237,6 +239,7 @@ public class MediaPlayerNotificationService extends Service implements
         try {
             player.pause();
         } catch (IllegalStateException e) {
+
         }
 
         if (notificationBuilder != null) {
@@ -244,6 +247,8 @@ public class MediaPlayerNotificationService extends Service implements
             manager.notify(NotificationStatics.NOTIFY_ID,
                     notificationBuilder.build());
         }
+
+        sendBroadcastForPause(playingTrack);
     }
 
     private void resume() {
@@ -257,6 +262,8 @@ public class MediaPlayerNotificationService extends Service implements
             manager.notify(NotificationStatics.NOTIFY_ID,
                     notificationBuilder.build());
         }
+
+        sendBroadcastForPlay(playingTrack);
     }
 
     private void close() {
@@ -287,11 +294,18 @@ public class MediaPlayerNotificationService extends Service implements
         play();
     }
 
-    public void sendBroadcast(Track track) {
+    public void sendBroadcastForPlay(Track track) {
         Intent intent = new Intent();
         intent.putExtra("track", track);
         intent.setAction("PLAYING_TRACK");
-        getBaseContext().sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
+    }
+
+    public void sendBroadcastForPause(Track track) {
+        Intent intent = new Intent();
+        intent.putExtra("track", track);
+        intent.setAction("STOP_TRACK");
+        LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
     }
 
 }

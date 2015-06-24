@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,13 +35,14 @@ public class PlayingFragment extends BaseListFragment {
         receiver = new MediaPlayReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("PLAYING_TRACK");
-        getActivity().registerReceiver(receiver, intentFilter);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, intentFilter);
     }
 
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
 
         super.onDestroy();
     }

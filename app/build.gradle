@@ -8,8 +8,8 @@ android {
         applicationId "forest.rice.field.k.preview"
         minSdkVersion 9
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "1.11"
     }
     buildTypes {
         release {
