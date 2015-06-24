@@ -95,7 +95,9 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
 
         receiver = new MyBroadcastReceiver();
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PLAYING_TRACK"));
+        LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PAUSE_TRACK"));
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("STOP_TRACK"));
+
     }
 
     @Override
@@ -285,12 +287,16 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
                     floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_PAUSE);
                 }
                 break;
-                case "STOP_TRACK": {
+                case "PAUSE_TRACK": {
                     floatingActionButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
                     floatingActionButton.setVisibility(View.VISIBLE);
                     floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_RESUME);
                 }
                 break;
+                case "STOP_TRACK": {
+                    floatingActionButton.setVisibility(View.GONE);
+                    floatingActionButton.setTag(null);
+                }
             }
         }
     }

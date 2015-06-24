@@ -197,6 +197,7 @@ public class MediaPlayerNotificationService extends Service implements
         playingTrack = playQueue.poll();
         if (playingTrack == null) {
             stopSelf();
+            sendBroadcastForStop();
             return;
         }
         if (player != null) {
@@ -268,6 +269,7 @@ public class MediaPlayerNotificationService extends Service implements
 
     private void close() {
         stopSelf();
+        sendBroadcastForStop();
     }
 
     private void fetchBitmapFromURLAsync(final String bitmapUrl) {
@@ -304,6 +306,12 @@ public class MediaPlayerNotificationService extends Service implements
     public void sendBroadcastForPause(Track track) {
         Intent intent = new Intent();
         intent.putExtra("track", track);
+        intent.setAction("PAUSE_TRACK");
+        LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
+    }
+
+    public void sendBroadcastForStop() {
+        Intent intent = new Intent();
         intent.setAction("STOP_TRACK");
         LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
     }
