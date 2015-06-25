@@ -13,7 +13,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -23,10 +22,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.example.android.uamp.AlbumArtCache;
 
 import forest.rice.field.k.R;
 import forest.rice.field.k.preview.entity.Track;
+import forest.rice.field.k.preview.manager.IntentManager;
 
 public class MediaPlayerNotificationService extends Service implements
         OnPreparedListener, OnCompletionListener {
@@ -47,7 +46,7 @@ public class MediaPlayerNotificationService extends Service implements
         public static final String ACTION_RESUME = "RESUME";
         public static final String ACTION_PAUSE = "PAUSE";
         public static final String ACTION_CLOSE = "CLOSE";
-        public static final String ACTION_OPENWEB = "OPENWEB";
+        public static final String ACTION_OPEN_PREVIEW = "OPEN_PREVIEW";
     }
 
     public class NotificationStatics {
@@ -55,7 +54,7 @@ public class MediaPlayerNotificationService extends Service implements
         public static final int REQUEST_CODE_PAUSE = 2001;
         public static final int REQUEST_CODE_RESUME = 3001;
         public static final int REQUEST_CODE_CLOSE = 4001;
-        public static final int REQUEST_CODE_OPENWEB = 5001;
+        public static final int REQUEST_CODE_OPEN_PREVIEW = 5001;
         public static final int NOTIFY_ID = 3001;
     }
 
@@ -91,15 +90,8 @@ public class MediaPlayerNotificationService extends Service implements
             resume();
         } else if (action.equals(ServiceStatics.ACTION_CLOSE)) {
             close();
-        } else if (action.equals(ServiceStatics.ACTION_OPENWEB)) {
-            Uri uri = Uri.parse(playingTrack.get(Track.trackViewUrl));
-            if (uri != null && uri.getHost() != null) {
-                Intent openweb = new Intent(Intent.ACTION_VIEW, uri);
-                openweb.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                // openweb.setFlags(geta);
-                getApplication().startActivity(openweb);
-
-            }
+        } else if (action.equals(ServiceStatics.ACTION_OPEN_PREVIEW)) {
+            startActivity(IntentManager.createOpenPreviewIntent(getBaseContext()));
         }
         return START_STICKY;
     }
@@ -162,11 +154,11 @@ public class MediaPlayerNotificationService extends Service implements
                     NotificationStatics.REQUEST_CODE_CLOSE, closeIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent openwebIntent = new Intent(getApplicationContext(),
+            Intent openPreviewIntent = new Intent(getApplicationContext(),
                     MediaPlayerNotificationService.class);
-            openwebIntent.setAction(ServiceStatics.ACTION_OPENWEB);
-            PendingIntent openWebPIntent = PendingIntent.getService(getApplicationContext(),
-                    NotificationStatics.REQUEST_CODE_OPENWEB, openwebIntent,
+            openPreviewIntent.setAction(ServiceStatics.ACTION_OPEN_PREVIEW);
+            PendingIntent openPreviewPIntent = PendingIntent.getService(getApplicationContext(),
+                    NotificationStatics.REQUEST_CODE_OPEN_PREVIEW, openPreviewIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             notificationBuilder.addAction(android.R.drawable.ic_media_play,
@@ -174,13 +166,13 @@ public class MediaPlayerNotificationService extends Service implements
             notificationBuilder.addAction(android.R.drawable.ic_media_pause,
                     "Pause", pausePIntent);
             notificationBuilder.setDeleteIntent(closePIntent);
-            notificationBuilder.setContentIntent(openWebPIntent);
+            notificationBuilder.setContentIntent(openPreviewPIntent);
 
             notificationBuilder.setAutoCancel(false);
         }
 
         if (playQueue == null) {
-            playQueue = new LinkedList<Track>();
+            playQueue = new LinkedList<>();
         }
 
         manager = NotificationManagerCompat.from(getApplicationContext());
@@ -235,8 +227,6 @@ public class MediaPlayerNotificationService extends Service implements
                     notificationBuilder.build());
 
             // Bitmap画像は非同期で取得
-//            fetchBitmapFromURLAsync(playingTrack.getLargestArtwork());
-
             Glide.with(getBaseContext()).load(playingTrack.getLargestArtwork()).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -283,19 +273,6 @@ public class MediaPlayerNotificationService extends Service implements
         stopSelf();
         sendBroadcastForStop();
     }
-
-//    private void fetchBitmapFromURLAsync(final String bitmapUrl) {
-//        AlbumArtCache.getInstance().fetch(bitmapUrl,
-//                new AlbumArtCache.FetchListener() {
-//                    @Override
-//                    public void onFetched(String artUrl, Bitmap bitmap,
-//                            Bitmap icon) {
-//                        notificationBuilder.setLargeIcon(bitmap);
-//                        manager.notify(NotificationStatics.NOTIFY_ID,
-//                                notificationBuilder.build());
-//                    }
-//                });
-//    }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
