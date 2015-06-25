@@ -20,6 +20,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.android.uamp.AlbumArtCache;
 
 import forest.rice.field.k.R;
@@ -232,7 +235,16 @@ public class MediaPlayerNotificationService extends Service implements
                     notificationBuilder.build());
 
             // Bitmap画像は非同期で取得
-            fetchBitmapFromURLAsync(playingTrack.getLargestArtwork());
+//            fetchBitmapFromURLAsync(playingTrack.getLargestArtwork());
+
+            Glide.with(getBaseContext()).load(playingTrack.getLargestArtwork()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    notificationBuilder.setLargeIcon(resource);
+                    manager.notify(NotificationStatics.NOTIFY_ID,
+                            notificationBuilder.build());
+                }
+            });
         }
     }
 
@@ -272,18 +284,18 @@ public class MediaPlayerNotificationService extends Service implements
         sendBroadcastForStop();
     }
 
-    private void fetchBitmapFromURLAsync(final String bitmapUrl) {
-        AlbumArtCache.getInstance().fetch(bitmapUrl,
-                new AlbumArtCache.FetchListener() {
-                    @Override
-                    public void onFetched(String artUrl, Bitmap bitmap,
-                            Bitmap icon) {
-                        notificationBuilder.setLargeIcon(bitmap);
-                        manager.notify(NotificationStatics.NOTIFY_ID,
-                                notificationBuilder.build());
-                    }
-                });
-    }
+//    private void fetchBitmapFromURLAsync(final String bitmapUrl) {
+//        AlbumArtCache.getInstance().fetch(bitmapUrl,
+//                new AlbumArtCache.FetchListener() {
+//                    @Override
+//                    public void onFetched(String artUrl, Bitmap bitmap,
+//                            Bitmap icon) {
+//                        notificationBuilder.setLargeIcon(bitmap);
+//                        manager.notify(NotificationStatics.NOTIFY_ID,
+//                                notificationBuilder.build());
+//                    }
+//                });
+//    }
 
     @Override
     public void onPrepared(MediaPlayer mp) {

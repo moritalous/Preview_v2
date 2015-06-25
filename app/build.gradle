@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "forest.rice.field.k.preview"
-        minSdkVersion 9
+        minSdkVersion 10
         targetSdkVersion 19
         versionCode 14
         versionName "1.13"
@@ -19,10 +19,15 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.github.bumptech.glide:glide:3.6.0'
 }

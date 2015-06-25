@@ -2,7 +2,6 @@
 package forest.rice.field.k.preview.view.base;
 
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import forest.rice.field.k.R;
 import forest.rice.field.k.preview.entity.Track;
 import forest.rice.field.k.preview.entity.Tracks;
-import forest.rice.field.k.preview.volley.VolleyManager;
 
 public class BaseArrayAdapter extends ArrayAdapter<Track> {
 
@@ -21,11 +21,11 @@ public class BaseArrayAdapter extends ArrayAdapter<Track> {
 
     protected Tracks tracks = null;
 
-    // private Context context = null;
+     private Context context = null;
 
     public BaseArrayAdapter(Context context, Tracks tracks) {
         super(context, 0, tracks);
-        // this.context = context;
+         this.context = context;
         layoutInflater_ = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.tracks = tracks;
@@ -58,10 +58,7 @@ public class BaseArrayAdapter extends ArrayAdapter<Track> {
         holder.name.setText("" + (position + 1) + ". " + track.get(Track.trackName));
         holder.artist.setText(track.get(Track.artistName));
         holder.collection.setText(track.get(Track.collectionName));
-
-        VolleyManager manager = VolleyManager.getInstance(getContext());
-        manager.imageGet(track.getLargestArtwork(), holder.image, android.R.color.transparent,
-                R.drawable.ic_launcher);
+        Glide.with(context).load(track.getLargestArtwork()).into(holder.image);
 
         return convertView;
     }
