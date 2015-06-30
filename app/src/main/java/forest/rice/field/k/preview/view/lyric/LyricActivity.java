@@ -4,6 +4,7 @@ package forest.rice.field.k.preview.view.lyric;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,8 @@ public class LyricActivity extends AppCompatActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override

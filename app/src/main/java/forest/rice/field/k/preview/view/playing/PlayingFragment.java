@@ -50,14 +50,7 @@ public class PlayingFragment extends BaseListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (getActivity() instanceof NavigationDrawerBaseInterface) {
-            NavigationDrawerBaseInterface activity = (NavigationDrawerBaseInterface) getActivity();
-            this.tracks = activity.getTracks();
-
-            BaseArrayAdapter adapter = new BaseArrayAdapter(getActivity(), this.tracks);
-            setListAdapter(adapter);
-        }
-
+        setupAdapter();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -83,11 +76,33 @@ public class PlayingFragment extends BaseListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     }
 
+//    @Override
+//    public void onListItemClick(ListView l, View v, int position, long id) {
+//        // 連続プレビュー
+//        setTracks(tracks.subTracks(position, tracks.size()));
+//        playAll(tracks, position);
+//    }
+
+
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        // 連続プレビュー
-        setTracks(tracks.subTracks(position, tracks.size()));
-        playAll(tracks, position);
+    protected void moveToPlayingFragment() {
+        // いどうしない
+        setupAdapter();
+    }
+
+    private void setupAdapter() {
+        if (getActivity() instanceof NavigationDrawerBaseInterface) {
+            NavigationDrawerBaseInterface activity = (NavigationDrawerBaseInterface) getActivity();
+            this.tracks = activity.getTracks();
+
+            BaseArrayAdapter adapter = new BaseArrayAdapter(getActivity(), this.tracks);
+            setListAdapter(adapter);
+        }
+    }
+
+    @Override
+    protected int getDialogArray() {
+        return R.array.track_select_actions_for_playlist;
     }
 
     class MediaPlayReceiver extends BroadcastReceiver {

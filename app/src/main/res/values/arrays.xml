@@ -9,4 +9,11 @@
         <item>@string/track_select_action_search_lyric_beta</item>
     </array>
 
+    <array name="track_select_actions_for_playlist">
+        <item>@string/track_select_action_preview_all</item>
+        <item>@string/track_select_action_detail</item>
+        <item>@string/track_select_action_search_lyric</item>
+        <item>@string/track_select_action_search_lyric_beta</item>
+    </array>
+
 </resources>

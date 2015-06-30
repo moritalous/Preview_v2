@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -98,6 +99,7 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PAUSE_TRACK"));
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("STOP_TRACK"));
 
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override

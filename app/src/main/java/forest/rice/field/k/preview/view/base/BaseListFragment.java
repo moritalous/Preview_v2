@@ -73,7 +73,7 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     public void onListItemClick(ListView l, View v, final int position, long id) {
 
         TrackSelectDialogFragment dialogFragment = TrackSelectDialogFragment
-                .newInstance(R.array.track_select_actions);
+                .newInstance(getDialogArray());
         dialogFragment.mOnClickListener = new DialogInterface.OnClickListener() {
 
             @Override
@@ -125,6 +125,10 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
 
         dialogFragment.show(getFragmentManager(), "TAG");
 
+    }
+
+    protected  int getDialogArray() {
+        return R.array.track_select_actions;
     }
 
     protected void setTracks(Tracks tracks) {
