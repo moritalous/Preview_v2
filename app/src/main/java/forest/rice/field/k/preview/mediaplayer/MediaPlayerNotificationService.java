@@ -156,6 +156,8 @@ public class MediaPlayerNotificationService extends Service implements
 
             Intent openPreviewIntent = new Intent(getApplicationContext(),
                     MediaPlayerNotificationService.class);
+            openPreviewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            openPreviewIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             openPreviewIntent.setAction(ServiceStatics.ACTION_OPEN_PREVIEW);
             PendingIntent openPreviewPIntent = PendingIntent.getService(getApplicationContext(),
                     NotificationStatics.REQUEST_CODE_OPEN_PREVIEW, openPreviewIntent,
