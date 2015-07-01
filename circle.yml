@@ -1,3 +1,7 @@
+general:
+  artifacts:
+    - "app/build/outputs/apk/app-release-unsigned.apk"
+
 machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
