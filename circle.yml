@@ -13,8 +13,11 @@ dependencies:
 
 test:
   override:
-    - ./gradlew assembleDebug
+    - echo "Nothing to do here"
 
 deployment:
-  commands:
+  master:
+    branch: master
+    commands:
+    - ./gradlew assembleDebug
     - curl -F "file=@app/build/outputs/apk/app-debug.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=test" https://deploygate.com/api/users/${DEPLOY_GATE_USERNAME}/apps
