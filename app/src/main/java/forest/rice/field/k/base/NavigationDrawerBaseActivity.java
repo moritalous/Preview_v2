@@ -182,6 +182,7 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
     public void setTitle(CharSequence title) {
         mActionBar.setTitle(title);
         getSupportActionBar().setTitle(title);
+        getSupportActionBar().setSubtitle("Preview");
     }
 
     @Override
