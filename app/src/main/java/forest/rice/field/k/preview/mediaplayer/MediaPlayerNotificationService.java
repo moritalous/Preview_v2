@@ -9,10 +9,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -170,6 +172,8 @@ public class MediaPlayerNotificationService extends Service implements
             notificationBuilder.setDeleteIntent(closePIntent);
             notificationBuilder.setContentIntent(openPreviewPIntent);
 
+            notificationBuilder.setColor(Color.GREEN);
+
             notificationBuilder.setAutoCancel(false);
         }
 
@@ -214,7 +218,12 @@ public class MediaPlayerNotificationService extends Service implements
         }
 
         if (notificationBuilder != null) {
-            notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                notificationBuilder.setSmallIcon(android.R.drawable.ic_media_play);
+            } else {
+                notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+            }
+
             notificationBuilder.setContentTitle(playingTrack
                     .get(Track.trackName)); // 1行目
             notificationBuilder.setContentText(playingTrack

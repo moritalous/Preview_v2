@@ -15,7 +15,7 @@ android {
         debugFlavor {
             applicationId 'forest.rice.field.k.preview.debug'
             minSdkVersion 10
-            targetSdkVersion 19
+            targetSdkVersion 21
             versionCode 1
             versionName '0.1'
         }
