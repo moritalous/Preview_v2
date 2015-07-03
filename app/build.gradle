@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('keystore/debug.keystore')
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     defaultConfig {
@@ -18,6 +23,7 @@ android {
             targetSdkVersion 21
             versionCode 1
             versionName '0.1'
+            signingConfig signingConfigs.debug
         }
         releaseFlavor {
             applicationId 'forest.rice.field.k.preview'
