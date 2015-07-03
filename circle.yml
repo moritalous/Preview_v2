@@ -5,7 +5,7 @@ general:
 machine:
   environment:
     ANDROID_HOME: /usr/local/android-sdk-linux
-    GRADLE_OPTS: -Xmx512m
+    GRADLE_OPTS: -Xmx1024m
 
 dependencies:
   post:
@@ -19,5 +19,5 @@ deployment:
   master:
     branch: master
     commands:
-    - ./gradlew assembleDebug
+    - ./gradlew assembleDebugFlavorDebug
     - curl -F "file=@app/build/outputs/apk/app-debug.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=test" https://deploygate.com/api/users/${DEPLOY_GATE_USERNAME}/apps
