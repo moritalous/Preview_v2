@@ -172,8 +172,7 @@ public class MediaPlayerNotificationService extends Service implements
             notificationBuilder.setDeleteIntent(closePIntent);
             notificationBuilder.setContentIntent(openPreviewPIntent);
 
-            notificationBuilder.setColor(Color.GREEN);
-
+            notificationBuilder.setColor(Color.argb(255,63, 81, 181));
             notificationBuilder.setAutoCancel(false);
         }
 
