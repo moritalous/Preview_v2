@@ -1,13 +1,26 @@
 
 package forest.rice.field.k.preview.view.topChart;
 
+import android.content.Context;
 import android.os.AsyncTask;
+
+import com.twitter.sdk.android.core.AppSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.request.ITunesRssRequest;
 
 public class TopChartAsyncTask extends AsyncTask<String, String, Tracks> {
 
     public TopChartAsyncTaskCallback callback;
+
+    private AppSession guestAppSession;
+
+    public Context context;
+
+    private List<String> tweetList = new ArrayList<>();
 
     @Override
     protected Tracks doInBackground(String... arg0) {

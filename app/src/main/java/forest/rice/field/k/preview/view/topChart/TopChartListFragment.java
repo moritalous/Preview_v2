@@ -53,6 +53,7 @@ public class TopChartListFragment extends SwipeRefreshListFragment implements To
 
     private void initiateRefresh() {
         task = new TopChartAsyncTask();
+        task.context = getActivity();
         task.callback = this;
         task.execute();
     }

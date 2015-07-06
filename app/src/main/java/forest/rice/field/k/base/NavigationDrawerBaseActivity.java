@@ -29,6 +29,7 @@ import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.view.playing.PlayingFragment;
 import forest.rice.field.k.preview.view.topChart.TopChartListFragment;
+import forest.rice.field.k.preview.view.tweet.TweetFragment;
 
 
 public class NavigationDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, NavigationDrawerBaseInterface {
@@ -90,8 +91,11 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         if (topChartFragment == null) {
             topChartFragment = TopChartListFragment.newInstance();
         }
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.container, topChartFragment)
+//                .commit();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, topChartFragment)
+                .replace(R.id.container, TweetFragment.newInstance())
                 .commit();
 
         receiver = new MyBroadcastReceiver();
