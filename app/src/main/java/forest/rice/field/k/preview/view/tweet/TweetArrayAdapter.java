@@ -2,7 +2,6 @@
 package forest.rice.field.k.preview.view.tweet;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.twitter.sdk.android.core.models.Tweet;
 
 import forest.rice.field.k.R;
 import forest.rice.field.k.preview.entity.Track;
-import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.entity.TweetWithTrack;
 import forest.rice.field.k.preview.entity.TweetsWithTrack;
-import forest.rice.field.k.preview.view.base.BaseArrayAdapter;
 
 public class TweetArrayAdapter extends ArrayAdapter<TweetWithTrack> {
 
@@ -57,6 +53,12 @@ public class TweetArrayAdapter extends ArrayAdapter<TweetWithTrack> {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        final Track track = tweetsWithTrack.get(position).track();
+
+        holder.name.setText("" + (position + 1) + ". " + track.get(Track.trackName));
+        holder.artist.setText(track.get(Track.artistName));
+        holder.collection.setText(track.get(Track.collectionName));
+        Glide.with(context).load(track.getLargestArtwork()).into(holder.image);
 
         return convertView;
     }
@@ -66,31 +68,5 @@ public class TweetArrayAdapter extends ArrayAdapter<TweetWithTrack> {
         TextView artist;
         TextView collection;
         ImageView image;
-    }
-
-    private class TrackAsyncTask extends AsyncTask<TweetWithTrack, Integer, Track> {
-
-        private ViewHolder holder;
-        int position = 0;
-
-        TrackAsyncTask(ViewHolder holder, int position) {
-            super();
-            this.holder = holder;
-            this.position = position;
-        }
-
-        @Override
-        protected Track doInBackground(TweetWithTrack... tweetWithTracks) {
-
-            return tweetWithTracks[0].track();
-        }
-
-        @Override
-        protected void onPostExecute(Track track) {
-            holder.name.setText("" + (position + 1) + ". " + track.get(Track.trackName));
-            holder.artist.setText(track.get(Track.artistName));
-            holder.collection.setText(track.get(Track.collectionName));
-            Glide.with(context).load(track.getLargestArtwork()).into(holder.image);
-        }
     }
 }
