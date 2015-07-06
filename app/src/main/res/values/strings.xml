@@ -16,6 +16,8 @@
     <string name="nav_source">Source</string>
     <string name="nav_playlist">プレビューキュー</string>
     <string name="nav_submenu">Sub Menu</string>
+    <string name="nav_radio">Radio</string>
+    <string name="nav_802">FM802</string>
 
     <string name="track_select_action_preview">プレビュー</string>
     <string name="track_select_action_preview_all">連続プレビュー</string>

@@ -20,6 +20,15 @@
 
     </group>
 
+    <group
+        android:id="@+id/nav_radio"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_802"
+            android:icon="@android:drawable/ic_media_pause"
+            android:title="@string/nav_802"/>
+    </group>
+
     <item
         android:id="@+id/nav_submenu"
         android:checkableBehavior="none"
@@ -31,4 +40,5 @@
                 android:title="@string/nav_source"/>
         </menu>
     </item>
+
 </menu>
