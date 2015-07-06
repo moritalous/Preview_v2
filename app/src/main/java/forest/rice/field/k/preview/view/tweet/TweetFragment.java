@@ -47,7 +47,10 @@ public class TweetFragment extends SwipeRefreshListFragment implements Twitter80
     }
 
     @Override
-    public void callback(TweetsWithTrack tweets) {
+    public void
+    callback(TweetsWithTrack tweets) {
+        this.tracks = tweets.getPlayableTracks();
+
         TweetArrayAdapter adapter = new TweetArrayAdapter(getActivity(), tweets);
         setListAdapter(adapter);
     }

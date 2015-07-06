@@ -11,22 +11,13 @@ public class TweetsWithTrack extends ArrayList<TweetWithTrack> {
     @Override
     public boolean add(final TweetWithTrack object) {
 
-        new AsyncTask<TweetWithTrack, Integer, TweetWithTrack>() {
+        Track track = object.track();
 
-            @Override
-            protected TweetWithTrack doInBackground(TweetWithTrack... tweetWithTracks) {
-
-                Track track = tweetWithTracks[0].track();
-
-                if(track.get(Track.trackId).equals("DUMMY")) {
-                    // DUMMY
-                } else {
-                    playingTracks.add(track);
-                }
-
-                return null;
-            }
-        }.execute(object);
+        if(track.get(Track.trackId).equals("DUMMY")) {
+            // DUMMY
+        } else {
+            playingTracks.add(track);
+        }
 
         return super.add(object);
     }
