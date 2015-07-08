@@ -184,6 +184,9 @@ public class MediaPlayerNotificationService extends Service implements
     }
 
     private void add(Track track) {
+        if(track.get(Track.trackId).equals("DUMMY")) {
+            return;
+        }
         if (playQueue != null) {
             playQueue.add(track);
         }

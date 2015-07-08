@@ -76,11 +76,11 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                String action = (String)view.getTag();
+                String action = (String) view.getTag();
 
                 Intent service = new Intent(getBaseContext(), MediaPlayerNotificationService.class);
                 service.setAction(action);
@@ -91,11 +91,8 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         if (topChartFragment == null) {
             topChartFragment = TopChartListFragment.newInstance();
         }
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.container, topChartFragment)
-//                .commit();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, TweetFragment.newInstance())
+                .replace(R.id.container, topChartFragment)
                 .commit();
 
         receiver = new MyBroadcastReceiver();
@@ -165,6 +162,14 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
                         .replace(R.id.container, PlayingFragment.newInstance())
                         .commit();
             }
+            break;
+            case R.id.nav_802: {
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, TweetFragment.newInstance())
+                        .commit();
+            }
+            break;
             default:
                 break;
         }

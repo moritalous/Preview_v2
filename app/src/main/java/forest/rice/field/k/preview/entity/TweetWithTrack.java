@@ -25,6 +25,10 @@ public class TweetWithTrack {
         return track;
     }
 
+    public void setTrack(Track track) {
+        this.track = track;
+    }
+
     public  String getTrackTitleAndArtist() {
         String split = "";
         try {
@@ -36,7 +40,7 @@ public class TweetWithTrack {
         return split;
     }
 
-    private Track getDummyTrack() {
+    public Track getDummyTrack() {
         Track track = new Track();
 
         track.put(Track.artistName, getArtistFromTweet());

@@ -47,7 +47,7 @@ public class TopChartListFragment extends SwipeRefreshListFragment implements To
                 initiateRefresh();
             }
         });
-        setColorSchemeResources(R.color.green, R.color.yellow, R.color.red, R.color.blue);
+        setColorSchemeResources(R.color.green, R.color.red, R.color.blue, R.color.yellow);
         // END_INCLUDE (setup_refreshlistener)
     }
 
