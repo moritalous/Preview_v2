@@ -16,4 +16,9 @@
         <item>@string/track_select_action_search_lyric_beta</item>
     </array>
 
+    <array name="search_type_select">
+        <item>@string/search_type_artist</item>
+        <item>@string/search_type_collection</item>
+    </array>
+
 </resources>

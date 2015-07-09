@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -30,9 +31,10 @@ import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService.Se
 import forest.rice.field.k.preview.view.dialog.TrackSelectDialogFragment;
 import forest.rice.field.k.preview.view.lyric.LyricActivity;
 import forest.rice.field.k.preview.view.playing.PlayingFragment;
+import forest.rice.field.k.preview.view.searchResultView.LookupByArtistFragment;
 import forest.rice.field.k.preview.view.searchResultView.SearchResultFragment;
 
-public class BaseListFragment extends ListFragment implements SearchView.OnQueryTextListener {
+public class BaseListFragment extends ListFragment implements SearchView.OnQueryTextListener, AdapterView.OnItemLongClickListener {
 
     protected Tracks tracks;
     protected MenuItem searchMenu;
@@ -51,6 +53,8 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     @Override
     public void onStart() {
         super.onStart();
+
+        getListView().setOnItemLongClickListener(this);
 
         setEmptyText(getString(R.string.track_search_no_result));
     }
@@ -127,8 +131,49 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
 
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
+        TrackSelectDialogFragment dialogFragment = TrackSelectDialogFragment
+                .newInstance(getDialogArrayForLongClick());
+        dialogFragment.mOnClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Track track = tracks.get(position);
+
+                switch (which) {
+                    case 0: {
+                        // アーティスト検索
+                        LookupByArtistFragment fragment = LookupByArtistFragment.newInstance(track.get(Track.artistId), track.get(Track.artistName));
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, fragment).addToBackStack(null)
+                                .commit();
+                    }
+                    break;
+                    case 1:{
+                        // アルバム検索
+                        LookupByArtistFragment fragment = LookupByArtistFragment.newInstance(track.get(Track.collectionId), track.get(Track.collectionName));
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, fragment).addToBackStack(null)
+                                .commit();
+                    }
+                    break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        dialogFragment.show(getFragmentManager(), "TAG");
+        return true;
+    }
+
     protected  int getDialogArray() {
         return R.array.track_select_actions;
+    }
+
+    protected  int getDialogArrayForLongClick() {
+        return R.array.search_type_select;
     }
 
     protected void setTracks(Tracks tracks) {
