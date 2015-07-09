@@ -17,7 +17,7 @@ test:
 
 deployment:
   master:
-    branch: /*/
+    branch: /.*/
     commands:
     - ./gradlew assembleDebugFlavorDebug
     - curl -F "file=@app/build/outputs/apk/app-debugFlavor-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=${CIRCLE_BRANCH} ${CIRCLE_BUILD_NUM}" https://deploygate.com/api/users/${DEPLOY_GATE_USERNAME}/apps
