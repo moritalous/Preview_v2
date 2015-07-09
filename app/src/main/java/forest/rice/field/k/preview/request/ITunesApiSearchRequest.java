@@ -16,12 +16,12 @@ import forest.rice.field.k.preview.entity.Tracks;
 public class ITunesApiSearchRequest extends AbstractRequest {
 
     private String keyword = null;
+    protected String endpoint = null;
 
     public ITunesApiSearchRequest(String keyword) {
         this.keyword = keyword;
+        this.endpoint = "https://itunes.apple.com/search?term=%s&country=jp&media=music&entity=song&lang=ja_jp&limit=200";
     }
-
-    private final String endpoint = "https://itunes.apple.com/search?term=%s&country=jp&media=music&entity=song&lang=ja_jp&limit=200";
 
     @Override
     public String getJson() throws IOException {
@@ -40,6 +40,11 @@ public class ITunesApiSearchRequest extends AbstractRequest {
 
         for (int i = 0; i < results.length(); i++) {
             JSONObject result = results.getJSONObject(i);
+
+            if(!result.getString("wrapperType").equals("track")) {
+                // Track以外（Artistなどはとりあえずスキップ
+                continue;
+            }
 
             Track searchResult = new Track();
 

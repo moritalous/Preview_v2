@@ -36,6 +36,8 @@ public class ITunesRssRequest extends AbstractRequest {
 
             String trackName = object.getJSONObject("im:name").getString("label");
             String artistName = object.getJSONObject("im:artist").getString("label");
+            String artistViewUrl = object.getJSONObject("im:artist").getJSONObject("attributes").getString("href");
+
 
             JSONArray imageArray = object.getJSONArray("im:image");
             String artworkUrl = imageArray.getJSONObject(imageArray.length() - 1)
@@ -51,15 +53,40 @@ public class ITunesRssRequest extends AbstractRequest {
 
             track.put(Track.trackName, trackName);
             track.put(Track.artistName, artistName);
+            track.put(Track.artistViewUrl, artistViewUrl);
             track.put(Track.artworkUrl100, artworkUrl);
             track.put(Track.collectionName, collectionName);
             track.put(Track.trackViewUrl, trackViewUrl);
             track.put(Track.previewUrl, previewUrl);
+            track.put(Track.artistId, getArtistId(artistViewUrl));
+            track.put(Track.collectionId, getCollectionId(trackViewUrl));
 
             tracks.add(track);
         }
 
         return tracks;
+    }
+
+    private String getArtistId(String artistViewUrl) {
+        return splitId(artistViewUrl);
+    }
+
+    private String getCollectionId(String trackViewUrl) {
+        return splitId(trackViewUrl);
+    }
+
+    private String splitId(String url) {
+        String result = "";
+        String[] split = url.split("/");
+
+        for(String str : split) {
+            if(str.startsWith("id")) {
+                result = str.substring(0, str.indexOf("?")).replace("id", "");
+                break;
+            }
+        }
+
+        return result;
     }
 
 }
