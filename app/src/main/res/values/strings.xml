@@ -28,5 +28,6 @@
     
     <string name="search_type_artist">アーティスト検索</string>
     <string name="search_type_collection">アルバム検索</string>
+    <string name="search_type_other_collection">他のアルバム検索</string>
 
 </resources>

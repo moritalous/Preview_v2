@@ -13,7 +13,7 @@ public class SearchResultAsyncTask extends AsyncTask<String, String, Tracks> {
 		ITunesApiSearchRequest request = new ITunesApiSearchRequest(params[0]);
 		Tracks result  = new Tracks();
 		try {
-			result = request.parseResultJson(request.getJson());
+			result = request.parseJsonForTrack(request.getJson());
 		} catch (Exception e) {
 		}
 		

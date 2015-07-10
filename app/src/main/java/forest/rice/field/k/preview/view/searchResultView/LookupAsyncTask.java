@@ -15,7 +15,7 @@ public class LookupAsyncTask extends AsyncTask<String, String, Tracks> {
 
         Tracks result  = new Tracks();
         try {
-            result = request.parseResultJson(request.getJson());
+            result = request.parseJsonForTrack(request.getJson());
         } catch (Exception e) {
         }
 
