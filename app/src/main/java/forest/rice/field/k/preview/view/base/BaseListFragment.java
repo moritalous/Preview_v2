@@ -32,6 +32,7 @@ import forest.rice.field.k.preview.view.dialog.TrackSelectDialogFragment;
 import forest.rice.field.k.preview.view.lyric.LyricActivity;
 import forest.rice.field.k.preview.view.playing.PlayingFragment;
 import forest.rice.field.k.preview.view.searchResultView.LookupByArtistFragment;
+import forest.rice.field.k.preview.view.searchResultView.LookupCollectionByArtistFragment;
 import forest.rice.field.k.preview.view.searchResultView.SearchResultFragment;
 
 public class BaseListFragment extends ListFragment implements SearchView.OnQueryTextListener, AdapterView.OnItemLongClickListener {
@@ -153,6 +154,14 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
                     case 1:{
                         // アルバム検索
                         LookupByArtistFragment fragment = LookupByArtistFragment.newInstance(track.get(Track.collectionId), track.get(Track.collectionName));
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, fragment).addToBackStack(null)
+                                .commit();
+                    }
+                    break;
+                    case 2:{
+                        // 他のアルバム検索
+                        LookupCollectionByArtistFragment fragment = LookupCollectionByArtistFragment.newInstance(track.get(Track.artistId), track.get(Track.artistName));
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.container, fragment).addToBackStack(null)
                                 .commit();

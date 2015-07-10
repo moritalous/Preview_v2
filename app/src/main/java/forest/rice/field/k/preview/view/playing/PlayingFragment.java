@@ -114,8 +114,10 @@ public class PlayingFragment extends BaseListFragment {
 
             int index = tracks.indexOf(track);
             if (index != -1) {
-                getListView().smoothScrollToPosition(index);
-                getListView().setSelection(index);
+                if(isAdded()) {
+                    getListView().smoothScrollToPosition(index);
+                    getListView().setSelection(index);
+                }
             }
         }
     }
