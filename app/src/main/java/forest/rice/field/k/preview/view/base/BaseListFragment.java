@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
+import java.util.Arrays;
+
 import forest.rice.field.k.R;
 import forest.rice.field.k.base.NavigationDrawerBaseInterface;
 import forest.rice.field.k.preview.entity.Track;
@@ -76,53 +78,45 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     @Override
     public void onListItemClick(ListView l, View v, final int position, long id) {
 
-        TrackSelectDialogFragment dialogFragment = TrackSelectDialogFragment
+        final TrackSelectDialogFragment dialogFragment = TrackSelectDialogFragment
                 .newInstance(getDialogArray());
         dialogFragment.mOnClickListener = new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        // 単一プレビュー
-                        setTracks(tracks.subTracks(position, position+1));
-                        play(tracks.get(position));
-                        break;
-                    case 1:
-                        // 連続プレビュー
-                        setTracks(tracks.subTracks(position, tracks.size()));
-                        playAll(tracks, position);
-                        moveToPlayingFragment();
-                        break;
-                    case 2:
-                        // iTunes
-                    {
-                        Intent i = IntentManager.createViewInBrowserIntent(tracks.get(position)
-                                .get(Track.trackViewUrl));
-                        startActivity(i);
-                    }
-                    break;
-                    case 3:
-                        // 歌詞検索
-                    {
-                        Intent i = IntentManager.createLyricsViewInBrowserIntent(
-                                tracks.get(position).get(Track.artistName), tracks.get(position)
-                                        .get(Track.trackName));
-                        startActivity(i);
-                    }
-                    break;
-                    case 4:
-                        // 歌詞検索β
-                    {
-                        Intent i = new Intent(getActivity(), LyricActivity.class);
-                        i.putExtra(LyricActivity.EXTRA_ARTIST,
-                                tracks.get(position).get(Track.artistName));
-                        i.putExtra(LyricActivity.EXTRA_TRACK,
-                                tracks.get(position).get(Track.trackName));
-                        startActivity(i);
-                    }
-                    default:
-                        break;
+
+                String[] list = getResources().getStringArray(getDialogArray());
+                String selectedItem = Arrays.asList(list).get(which);
+
+                if(selectedItem.equals(getString(R.string.track_select_action_preview))) {
+                    // 単一プレビュー
+                    setTracks(tracks.subTracks(position, position+1));
+                    play(tracks.get(position));
+                } else if(selectedItem.equals(getString(R.string.track_select_action_preview_all))) {
+                    // 連続プレビュー
+                    setTracks(tracks.subTracks(position, tracks.size()));
+                    playAll(tracks, position);
+                    moveToPlayingFragment();
+
+                } else if(selectedItem.equals(getString(R.string.track_select_action_detail))) {
+                    // iTunes
+                    Intent i = IntentManager.createViewInBrowserIntent(tracks.get(position)
+                            .get(Track.trackViewUrl));
+                    startActivity(i);
+                } else if(selectedItem.equals(getString(R.string.track_select_action_search_lyric))) {
+                    // 歌詞検索
+                    Intent i = IntentManager.createLyricsViewInBrowserIntent(
+                            tracks.get(position).get(Track.artistName), tracks.get(position)
+                                    .get(Track.trackName));
+                    startActivity(i);
+                } else if(selectedItem.equals(getString(R.string.track_select_action_search_lyric_beta))) {
+                    // 歌詞検索β
+                    Intent i = new Intent(getActivity(), LyricActivity.class);
+                    i.putExtra(LyricActivity.EXTRA_ARTIST,
+                            tracks.get(position).get(Track.artistName));
+                    i.putExtra(LyricActivity.EXTRA_TRACK,
+                            tracks.get(position).get(Track.trackName));
+                    startActivity(i);
                 }
             }
         };
