@@ -4,6 +4,7 @@ package forest.rice.field.k.preview.view.base;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -58,12 +59,14 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
         super.onStart();
 
         getListView().setDivider(null);
-        getListView().setDividerHeight(16);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getListView().setDividerHeight(16);
+            getListView().setPadding(16, 16, 16, 16);
+        } else {
+            getListView().setPadding(4, 2, 4, 2);
+        }
         getListView().setFastScrollEnabled(true);
-        getListView().setPadding(16, 16, 16, 16);
-
         getListView().setDrawSelectorOnTop(true);
-
         getListView().setOnItemLongClickListener(this);
 
         setEmptyText(getString(R.string.track_search_no_result));
