@@ -57,6 +57,7 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     public void onStart() {
         super.onStart();
 
+        getListView().setFastScrollEnabled(true);
         getListView().setOnItemLongClickListener(this);
 
         setEmptyText(getString(R.string.track_search_no_result));
