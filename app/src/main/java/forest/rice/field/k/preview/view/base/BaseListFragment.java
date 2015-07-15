@@ -59,12 +59,13 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
         super.onStart();
 
         getListView().setDivider(null);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getListView().setDividerHeight(16);
-            getListView().setPadding(16, 16, 16, 16);
-        } else {
-            getListView().setPadding(4, 2, 4, 2);
-        }
+//        getListView().setDividerHeight(16);
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getListView().setDividerHeight(16);
+////            getListView().setPadding(16, 16, 16, 16);
+//        } else {
+////            getListView().setPadding(4, 2, 4, 2);
+//        }
         getListView().setFastScrollEnabled(true);
         getListView().setDrawSelectorOnTop(true);
         getListView().setOnItemLongClickListener(this);
