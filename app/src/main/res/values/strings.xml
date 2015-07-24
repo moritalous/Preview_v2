@@ -10,6 +10,15 @@
     <!-- Description of the icon that closes the navigation drawer, used by accessibility. -->
     <string name="drawer_close">Close navigation drawer</string>
 
+    <!-- Navigation Header -->
+    <string name="country">国</string>
+
+    <!-- Country -->
+    <string name="country_jp">日本</string>
+    <string name="country_us">United States</string>
+    <string name="country_kr">Korea</string>
+    <string name="country_gb">United Kingdom</string>
+
     <!-- Navigation Item -->
     <string name="nav_top_chart">トップチャート</string>
     <string name="nav_search">検索結果</string>
@@ -25,9 +34,10 @@
     <string name="track_search_no_result">No Result</string>
     <string name="lyric_search_no_result">見つかりませんでした。</string>
     <string name="playlist_no_track">No Track</string>
-    
+
     <string name="search_type_artist">アーティスト検索</string>
     <string name="search_type_collection">アルバム検索</string>
     <string name="search_type_other_collection">他のアルバム検索</string>
+
 
 </resources>

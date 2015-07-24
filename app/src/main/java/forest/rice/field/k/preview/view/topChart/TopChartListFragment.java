@@ -1,6 +1,7 @@
 
 package forest.rice.field.k.preview.view.topChart;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -51,10 +52,12 @@ public class TopChartListFragment extends SwipeRefreshListFragment implements To
         // END_INCLUDE (setup_refreshlistener)
     }
 
-    private void initiateRefresh() {
-        task = new TopChartAsyncTask();
-        task.callback = this;
-        task.execute();
+    public void initiateRefresh() {
+        if(task == null || !task.getStatus().equals(AsyncTask.Status.RUNNING)) {
+            task = new TopChartAsyncTask();
+            task.callback = this;
+            task.execute();
+        }
     }
 
     @Override

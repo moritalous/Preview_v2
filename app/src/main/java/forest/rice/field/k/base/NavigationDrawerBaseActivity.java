@@ -4,13 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -18,13 +19,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 
 import forest.rice.field.k.R;
+import forest.rice.field.k.preview.entity.Country;
 import forest.rice.field.k.preview.entity.Tracks;
 import forest.rice.field.k.preview.mediaplayer.MediaPlayerNotificationService;
 import forest.rice.field.k.preview.view.playing.PlayingFragment;
@@ -41,13 +45,13 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
 
     private Toolbar mToolbar;
 
-    private Fragment topChartFragment;
+    private TopChartListFragment topChartFragment;
 
     private Tracks tracks;
 
     private FloatingActionButton floatingActionButton;
 
-    private BroadcastReceiver receiver;
+    private SharedPreferences pref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,11 +79,13 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+
         floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                String action = (String)view.getTag();
+                String action = (String) view.getTag();
 
                 Intent service = new Intent(getBaseContext(), MediaPlayerNotificationService.class);
                 service.setAction(action);
@@ -90,16 +96,51 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         if (topChartFragment == null) {
             topChartFragment = TopChartListFragment.newInstance();
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, topChartFragment)
-                .commit();
 
-        receiver = new MyBroadcastReceiver();
+        BroadcastReceiver receiver = new MyBroadcastReceiver();
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PLAYING_TRACK"));
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("PAUSE_TRACK"));
         LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, new IntentFilter("STOP_TRACK"));
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        final AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.spinner_language);
+
+        KeyValuePairAdapter adapter = new KeyValuePairAdapter(this, android.R.layout.simple_spinner_item, Country.getInstance());
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        String selectedCountry = pref.getString("country", "jp");
+        spinner.setSelection(Country.indexOfFirst(selectedCountry));
+        spinner.setTag("init");
+        Country.selectedCountryCode = selectedCountry;
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(spinner.getTag() != null) {
+                    spinner.setTag(null);
+                    return;
+                }
+
+                Country.selectedCountryCode = ((KeyValuePairAdapter) adapterView.getAdapter()).getItem(i).first;
+                pref.edit()
+                        .putString("country", Country.selectedCountryCode)
+                        .apply();
+
+                topChartFragment.initiateRefresh();
+                mDrawerLayout.closeDrawers();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, topChartFragment)
+                .commit();
     }
 
     @Override
@@ -148,18 +189,11 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
                 startActivity(intent);
                 break;
             case R.id.nav_ranking: {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, topChartFragment)
-                        .commit();
+                showTopChartFragment();
             }
             break;
             case R.id.nav_playlist: {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, PlayingFragment.newInstance())
-                        .commit();
+                showPlaylistFragment();
             }
             default:
                 break;
@@ -181,8 +215,11 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
     @Override
     public void setTitle(CharSequence title) {
         mActionBar.setTitle(title);
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setSubtitle("Preview");
+        ActionBar actionbar = getSupportActionBar();
+        if(actionbar != null) {
+            actionbar.setTitle(title);
+            actionbar.setSubtitle(getString(R.string.app_name));
+        }
     }
 
     @Override
@@ -201,6 +238,21 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
             this.tracks = new Tracks();
         }
         return this.tracks;
+    }
+
+    private void showTopChartFragment() {
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, topChartFragment)
+                .commit();
+    }
+
+    private void showPlaylistFragment() {
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, PlayingFragment.newInstance())
+                .commit();
     }
 
     private class DrawerListener implements DrawerLayout.DrawerListener {
@@ -284,13 +336,14 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
 
             switch (action) {
                 case "PLAYING_TRACK": {
-
+                    //noinspection deprecation
                     floatingActionButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
                     floatingActionButton.setVisibility(View.VISIBLE);
                     floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_PAUSE);
                 }
                 break;
                 case "PAUSE_TRACK": {
+                    //noinspection deprecation
                     floatingActionButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
                     floatingActionButton.setVisibility(View.VISIBLE);
                     floatingActionButton.setTag(MediaPlayerNotificationService.ServiceStatics.ACTION_RESUME);
