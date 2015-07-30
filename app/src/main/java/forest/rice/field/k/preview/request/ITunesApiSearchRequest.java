@@ -8,15 +8,13 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.xml.transform.Result;
 
 import forest.rice.field.k.preview.entity.Artist;
 import forest.rice.field.k.preview.entity.Artists;
 import forest.rice.field.k.preview.entity.Collection;
 import forest.rice.field.k.preview.entity.Collections;
+import forest.rice.field.k.preview.entity.Country;
 import forest.rice.field.k.preview.entity.Results;
 import forest.rice.field.k.preview.entity.Track;
 import forest.rice.field.k.preview.entity.Tracks;
@@ -28,12 +26,12 @@ public class ITunesApiSearchRequest extends AbstractRequest {
 
     public ITunesApiSearchRequest(String keyword) {
         this.keyword = keyword;
-        this.endpoint = "https://itunes.apple.com/search?term=%s&country=jp&media=music&entity=song&lang=ja_jp&limit=200";
+        this.endpoint = "https://itunes.apple.com/search?term=%s%s&media=music&entity=song&limit=200";
     }
 
     @Override
     public String getJson() throws IOException {
-        URL url = new URL(String.format(endpoint, URLEncoder.encode(keyword, "UTF-8")));
+        URL url = new URL(String.format(endpoint, URLEncoder.encode(keyword, "UTF-8"), getCountry()));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         return getStringFromInputStream(connection.getInputStream());
     }
@@ -61,7 +59,7 @@ public class ITunesApiSearchRequest extends AbstractRequest {
         for (int i = 0; i < results.length(); i++) {
             JSONObject result = results.getJSONObject(i);
 
-            if(result.getString("wrapperType").equals("track")) {
+            if (result.getString("wrapperType").equals("track")) {
                 Track searchResult = new Track();
 
                 Iterator<String> keys = result.keys();
@@ -72,7 +70,7 @@ public class ITunesApiSearchRequest extends AbstractRequest {
                 }
 
                 items.tracks.add(searchResult);
-            } else if(result.getString("wrapperType").equals("collection")) {
+            } else if (result.getString("wrapperType").equals("collection")) {
                 Collection collection = new Collection();
                 Iterator<String> keys = result.keys();
 
@@ -81,7 +79,7 @@ public class ITunesApiSearchRequest extends AbstractRequest {
                     collection.put(key, result.getString(key));
                 }
                 items.collections.add(collection);
-            } else if(result.getString("wrapperType").equals("artist")) {
+            } else if (result.getString("wrapperType").equals("artist")) {
                 Artist artist = new Artist();
                 Iterator<String> keys = result.keys();
 
@@ -93,5 +91,14 @@ public class ITunesApiSearchRequest extends AbstractRequest {
             }
         }
         return items;
+    }
+
+    private String getCountry() {
+
+        if(Country.selectedCountryCode.equals("jp")) {
+            return "&country=jp&lang=ja_jp";
+        }
+
+        return String.format("&country=%s", Country.selectedCountryCode.substring(0, 2));
     }
 }

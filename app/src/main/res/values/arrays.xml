@@ -22,4 +22,9 @@
         <item>@string/search_type_other_collection</item>
     </array>
 
+    <string-array name="language">
+        <item name="ja">@string/country_jp</item>
+        <item name="en">@string/country_us</item>
+    </string-array>
+
 </resources>

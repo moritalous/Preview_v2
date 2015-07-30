@@ -4,6 +4,6 @@ public class ITunesAPILookupRequest extends  ITunesApiSearchRequest {
 
     public ITunesAPILookupRequest(String keyword) {
         super(keyword);
-        this.endpoint = "https://itunes.apple.com/lookup?country=jp&media=music&entity=song&lang=ja_jp&limit=200&id=%s";
+        this.endpoint = "https://itunes.apple.com/lookup?&id=%s%s&media=music&entity=song&limit=200";
     }
 }
