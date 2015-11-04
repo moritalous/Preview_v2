@@ -29,8 +29,8 @@ android {
             applicationId 'forest.rice.field.k.preview'
             minSdkVersion 10
             targetSdkVersion 23
-            versionCode 19
-            versionName '1.18'
+            versionCode 20
+            versionName '1.19'
         }
     }
 }
