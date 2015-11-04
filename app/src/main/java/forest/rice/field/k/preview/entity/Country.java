@@ -2,7 +2,8 @@ package forest.rice.field.k.preview.entity;
 
 import android.support.v4.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Country extends ArrayList<Pair<String, String>> {
 
@@ -35,7 +36,7 @@ public class Country extends ArrayList<Pair<String, String>> {
 //            "bn",
 //            "bo",
 //            "bo_en",
-//            "br",
+            "br",
 //            "br_en",
 //            "bs",
 //            "bt",
@@ -247,7 +248,7 @@ public class Country extends ArrayList<Pair<String, String>> {
 //            "Brunei Darussalam",
 //            "Bolivia",
 //            "Bolivia (English)",
-//            "Brazil",
+            "Brazil",
 //            "Brazil (English)",
 //            "Bahamas",
 //            "Bhutan",
