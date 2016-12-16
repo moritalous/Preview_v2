@@ -1,7 +1,6 @@
 
 package forest.rice.field.k.preview.view.base;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -9,18 +8,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
 
@@ -44,6 +40,8 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     protected MenuItem searchMenu;
     protected SearchView searchView;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public BaseListFragment() {
     }
 
@@ -52,6 +50,9 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Override
@@ -197,6 +198,13 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     }
 
     private void play(Track track) {
+        // Firabase
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "name");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Play Track");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         Intent service = new Intent(getActivity(), MediaPlayerNotificationService.class);
         service.setAction(ServiceStatics.ACTION_TRACK_CLEAR);
         getActivity().startService(service);
@@ -212,6 +220,13 @@ public class BaseListFragment extends ListFragment implements SearchView.OnQuery
     }
 
     protected void playAll(Tracks tracks, int startPosition) {
+        // Firabase
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "name");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Play All Track");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
         Intent service = new Intent(getActivity(), MediaPlayerNotificationService.class);
         service.setAction(ServiceStatics.ACTION_TRACK_CLEAR);
         getActivity().startService(service);

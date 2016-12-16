@@ -141,6 +141,8 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, topChartFragment)
                 .commit();
+
+
     }
 
     @Override
@@ -223,11 +225,6 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
     }
 
     @Override
-    public void setTracks(Tracks tracks) {
-        this.tracks = tracks;
-    }
-
-    @Override
     public void clearTracks() {
         this.tracks.clear();
     }
@@ -238,6 +235,11 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
             this.tracks = new Tracks();
         }
         return this.tracks;
+    }
+
+    @Override
+    public void setTracks(Tracks tracks) {
+        this.tracks = tracks;
     }
 
     private void showTopChartFragment() {
@@ -253,6 +255,13 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, PlayingFragment.newInstance())
                 .commit();
+    }
+
+    /**
+     * Create a compatible helper that will manipulate the action bar if available.
+     */
+    private ActionBarHelper createActionBarHelper() {
+        return new ActionBarHelper();
     }
 
     private class DrawerListener implements DrawerLayout.DrawerListener {
@@ -278,13 +287,6 @@ public class NavigationDrawerBaseActivity extends AppCompatActivity implements N
         public void onDrawerStateChanged(int newState) {
             mDrawerToggle.onDrawerStateChanged(newState);
         }
-    }
-
-    /**
-     * Create a compatible helper that will manipulate the action bar if available.
-     */
-    private ActionBarHelper createActionBarHelper() {
-        return new ActionBarHelper();
     }
 
     /**
